@@ -91,7 +91,7 @@ def demonstrate_list_comprehension():
     Using str() and join() in printing results.
     """
 
-    # songs = ['Hey Jude', 'Eleanor Rigby', 'Let It Be', 'Penny Lane']
+    # songs = ["Don't Bother Me", 'If I Needed Someone', 'Think for Yourself', 'Taxman', 'Only a Northern Song']
 
 
 #%%

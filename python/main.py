@@ -85,7 +85,7 @@ print(globals())
 #%%
 # Importing from another script
 
-from inception import year_of_birth
+from python.inception import year_of_birth
 
 print()
 print()
