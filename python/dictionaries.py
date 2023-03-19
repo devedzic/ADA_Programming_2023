@@ -28,6 +28,44 @@ def demonstrate_dictionaries():
     - using the keys() and values() functions
     """
 
+    d = {}
+    print(d)
+    print(type(d))
+    print()
+
+    george = {'name': 'George Harrison', 11: 'whatever'}
+    print(george)
+    print(george[11])
+    print()
+
+    george['city'] = 'Liverpool'
+    print(george)
+    del george[11]
+    george.pop('city')
+    print(george)
+    print()
+
+    george = {'name': 'George Harrison', 11: 'whatever'}
+    print(george.items())
+    print(list(george.items()))
+    for k, v in george.items():
+        print((k, v))
+    print()
+
+    from pprint import pprint
+    pprint(george, width=1)
+    print()
+
+    george.update({'city': 'Liverpool'})
+    print(george)
+    george.update([('year', 1943), ('instrument', 'lead guitar')])
+    print(george)
+    print()
+
+    print(george.keys())
+    print(george.values())
+    print(list(george.values()))
+
 
 #%%
 # Test demonstrate_dictionaries()
@@ -42,6 +80,28 @@ def sort_dictionary(d, by):
     - using lambda
     """
 
+    # if (by == 'K') or (by == 'k'):
+    #     return dict(sorted(zip(d.keys(), d.values())))
+    # elif (by == 'V') or (by == 'v'):
+    #     return dict(sorted(zip(d.values(), d.keys())))
+    # else:
+    #     return None
+
+    # from operator import itemgetter
+    # if (by == 'K') or (by == 'k'):
+    #     return dict(sorted(d.items(), key=itemgetter(0)))
+    # elif (by == 'V') or (by == 'v'):
+    #     return dict(sorted(d.items(), key=itemgetter(1)))
+    # else:
+    #     return None
+
+    if (by == 'K') or (by == 'k'):
+        return dict(sorted(d.items(), key=lambda x: x[0]))
+    elif (by == 'V') or (by == 'v'):
+        return dict(sorted(d.items(), key=lambda x: x[1]))
+    else:
+        return None
+
 
 #%%
 def demonstrate_dict_sorting():
@@ -51,10 +111,11 @@ def demonstrate_dict_sorting():
     from pprint import pprint
 
     songs = {2: 'Something', 1: 'While My Guitar Gently Weeps', 3: 'If I Needed Someone'}
-    george = {'name': 'George Harrison', 'city': 'Liverpool', 'year': 1943}
+    george = {'name': 'George Harrison', 'city': 'Liverpool', 'year': str(1943)}
+
+    print(sort_dictionary(george, 'v'))
 
 
 #%%
 # Test demonstrate_dict_sorting()
 demonstrate_dict_sorting()
-
