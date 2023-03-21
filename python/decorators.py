@@ -45,7 +45,27 @@ def pass_simple_function_as_parameter():
     #     g(f, *(1, 2, 3))          # result: 6
     #     g(f, *[1, 2, 3])          # result: 6
 
+    def f(*args):
+        return [a for a in args]
+
+    def g(fun, *args):
+        return fun(*args)
+
+    print(g(f, *('Something', 'Taxman', 'All Things Must Pass')))
+    print(g(f, ))
+
     # Case 2: 1 or more arguments (the first one is positional)
+
+    def f1(first, *args):
+        print(first)
+        return [a for a in args]
+
+    def g1(fun1, *args):
+        return fun1(args[0], *args[1:])
+
+    print(g1(f1, 'George Harrison', 'Something', 'Taxman', 'All Things Must Pass'))
+    print(g1(f1, 'George Harrison', ))
+    # print(g1(f1, ))                             # NO! - there must be one positional argument
 
 
 #%%
@@ -87,6 +107,8 @@ def pass_function_as_parameter(f, *args, **kwargs):
     See https://stackoverflow.com/a/34206138/1899061 for further details.
     """
 
+    f(*args, **kwargs)
+
 
 #%%
 # Test pass_function_as_parameter(f, *args, **kwargs)
@@ -101,11 +123,19 @@ def return_function(full_name, first_name_flag):
     - a function that returns a person's family name
     """
 
+    def first():
+        return full_name.split()[0]
+
+    def second():
+        return full_name.split()[1]
+
+    return first if first_name_flag else second
+
 
 #%%
 # Test return_function(full_name, first_name_flag)
-# f = return_function('George Harrison', False)
-# print(f())
+f = return_function('George Harrison', False)
+print(f())
 
 
 #%%
@@ -117,12 +147,20 @@ def return_function_with_args(*args):
     - a function that returns a tuple of args (or a list of args, or...)
     """
 
+    def empty(*params):
+        return ()
+
+    def non_empty(*params):
+        return params
+
+    return non_empty if args else empty
+
 
 #%%
 # Test return_function_with_args(*args)
 # f = return_function_with_args()
-# f = return_function_with_args(1)
-# print(f('George', 'Harrison', 1943))
+f = return_function_with_args(1)
+print(f('George', 'Harrison', 1943))
 
 
 #%%
@@ -176,6 +214,14 @@ def a_very_simple_decorator(f):
     # George Harrison
     # George Harrison
 
+    def wrap(*args):
+        print('George Harrison')
+        v = f(*args)
+        print('George Harrison')
+        return v
+
+    return wrap
+
 
 #%%
 # Test a_very_simple_decorator(f)
@@ -187,14 +233,14 @@ def songs(*args):
 songs('Something', 'Taxman', 'My Sweet Lord')
 
 #%%
-# f = a_very_simple_decorator(songs)
-# f('Only a Northern Song', 'Think for Yourself', 'I Want to Tell You')
+f = a_very_simple_decorator(songs)
+f('Only a Northern Song', 'Think for Yourself', 'I Want to Tell You')
 
 #%%
-# songs = a_very_simple_decorator(songs)
-# songs('Something', 'Taxman', 'My Sweet Lord')
-# print()
-# songs()
+songs = a_very_simple_decorator(songs)
+songs('Something', 'Taxman', 'My Sweet Lord')
+print()
+songs()
 
 
 #%%
@@ -212,6 +258,19 @@ def band_details(f_to_decorate):
         return wrapper_decorator
     """
 
+    @functools.wraps(f_to_decorate)
+    def wrap(*args, **kwargs):
+        print('--------------')
+        v = f_to_decorate(*args, *kwargs)
+        if len(args) > 1:                                   # the first argument is positional
+            print(f'{", ".join([m for m in args[1:]])}')
+        if kwargs:
+            print(f'{", ".join([k + ": " + str(v) for k, v in kwargs.items()])}')
+        print('--------------')
+        return v
+
+    return wrap
+
 
 #%%
 @band_details
@@ -221,11 +280,13 @@ def print_band(name, *members, **years_active):
     omit it if decorating manually.
     """
 
+    print(name)
+
 
 #%%
 # Test members(f_to_decorate)
-print_band('The Beatles', *the_beatles, )
-print_band('The Beatles', start=1962, end=1970)
+# print_band('The Beatles', *the_beatles, )
+# print_band('The Beatles', start=1962, end=1970)
 print_band('The Beatles', *the_beatles, start=1962, end=1970)
 
 #%%
