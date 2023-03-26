@@ -4,7 +4,7 @@
 
 #%%
 # Setup / Data
-song = 'Oh! Darling'
+song = 'Here Comes the Sun'
 year = 1969
 
 john = 'John Lennon'

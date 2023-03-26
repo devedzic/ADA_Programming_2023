@@ -30,18 +30,27 @@ class Band():
     # Class variables: like static fields in Java; typically defined and initialized before __init__()
     # Insert a class variable (static field), such as genres, date_pattern,...
 
-    def __init__(self, name, *members, start=date.today(), end=date.today()):
-        pass
+    genres = ['rock', 'blues', 'alternative', ]
 
-        # self.__i = 0                                  # introduce and initialize iterator counter, self.__i
+    def __init__(self, name, *members, start=date.today(), end=date.today()):
+        self.name = name
+        self.members = members
+        self.start = start
+        self.end = end
+
+        self.__i = 0                                  # introduce and initialize iterator counter, self.__i
 
         # Code to check if the band name is specified correctly (possibly raises BandNameError)
 
     def __str__(self):
-        pass
+        n = f'{self.name}'
+        n += ': ' if self.members else ' '
+        m = ', '.join([str(m) for m in self.members]) if self.members else ''
+        s = str(self.start.year)
+        e = str(self.end.year)
+        return f'{n}{m} ({s}-{e})'
 
     def __eq__(self, other):
-        pass
         # Musician objects are unhashable, so comparing the members tuples from self and other directly does not work;
         # see https://stackoverflow.com/a/14721133/1899061, https://stackoverflow.com/a/17236824/1899061
         # return self == other if isinstance(other, Band) else False    # No! Musician objects are unhashable!
@@ -55,11 +64,21 @@ class Band():
 
         # members must be compared 'both ways', because the two tuples can be of different length
 
+        t = isinstance(other, Band)
+        n = self.name == other.name
+        m = all([x in self.members for x in other.members]) and all([x in other.members for x in self.members])
+        s = self.start.year == other.start.year
+        e = self.end.year == other.end.year
+
+        return t and n and m and s and e
+
     @staticmethod
     def is_date_valid(d):
         """It is assumed that a band does not perform together since more than ~60 years ago.
         So, the valid date to denote the start of a band's career is between Jan 01, 1960, and today.
         """
+
+        return date(1960, 1, 1) <= d <= date.today() if isinstance(d, date) else False
 
     def __iter__(self):
         """Once __iter__() and __next__() are implemented in a class,
@@ -71,26 +90,46 @@ class Band():
         """
 
         # self.__i = 0
-        # return self               # sufficient if the iterator counter is introduced and initialized in __init__()
+        return self               # sufficient if the iterator counter is introduced and initialized in __init__()
 
     def __next__(self):
-        pass
+        if self.__i <= len(self.members):
+            m = self.members[self.__i]
+            self.__i += 1
+            return m
+        else:
+            raise StopIteration
 
 
 #%%
 # Check class variables
-
+print(Band.genres)
 
 #%%
 # Test the basic methods (__init__(), __str__(),...)
-
+the_beatles = Band('The Beatles', *[johnLennon, paulMcCartney, georgeHarrison, ringoStarr],
+                   start=date(1962, 10, 5), end=date(1970, 4, 11))
+print(the_beatles)
+print(the_beatles == Band('The Beatles', *[johnLennon, paulMcCartney, georgeHarrison, ringoStarr],
+                          start=date(1962, 10, 5), end=date(1970, 4, 11)))
+print(the_beatles.genres)
 
 #%%
 # Test the date validator (@staticmethod is_date_valid(<date>))
-
+print(Band.is_date_valid(date(1950, 4, 2)))
 
 #%%
 # Test the iterator
+m_iterator = iter(the_beatles)
+# print(type(m_iterator))
+while True:
+    try:
+        m = next(the_beatles)
+        print(m)
+    except:
+        break
+print('Done')
+# m = next(the_beatles)             # No! The iterator is exhausted
 
 
 #%%
@@ -100,13 +139,35 @@ def next_member(band):
     A great tutorial on generators: https://realpython.com/introduction-to-python-generators/.
     """
 
+    for m in band.members:
+        input('Next: ')
+        yield m
+        print('Yeah!')
+
 
 #%%
 # Test next_member(band)
 
+m_gen = next_member(the_beatles)
+print(type(m_gen))
+while True:
+    try:
+        print(next(m_gen))
+    except:
+        break
+print('Done')
+
 
 #%%
 # Demonstrate generator expressions
+ge = (i**2 for i in range(5))
+print(type(ge))
+print(next(ge))
+print(next(ge))
+print(next(ge))
+print(next(ge))
+print(next(ge))
+# print(next(ge))                   # No! The generator is exhausted!
 
 
 #%%
@@ -152,16 +213,22 @@ def band_json_to_py(band_json):
 
 # Single object
 from json_tricks import loads, dumps
+theBeatles = Band('The Beatles', *[johnLennon, paulMcCartney, georgeHarrison, ringoStarr],
+                  start=date(1957, 7, 6), end=date(1970, 4, 10))
+theBeatles_json = dumps(theBeatles, indent=4)
+print(theBeatles == loads(theBeatles_json))
 
 # List of objects
 
-# theBeatles = Band('The Beatles', *[johnLennon, paulMcCartney, georgeHarrison, ringoStarr],
-#                   start=date(1957, 7, 6), end=date(1970, 4, 10))
-# theRollingStones = Band('The Rolling Stones', *[mickJagger, keithRichards, ronWood, charlieWatts],
-#                         start=date(1962, 7, 12))
-# pinkFloyd = Band('Pink Floyd', *[sydBarrett, davidGilmour, rogerWaters, nickMason, rickWright])
+theBeatles = Band('The Beatles', *[johnLennon, paulMcCartney, georgeHarrison, ringoStarr],
+                  start=date(1957, 7, 6), end=date(1970, 4, 10))
+theRollingStones = Band('The Rolling Stones', *[mickJagger, keithRichards, ronWood, charlieWatts],
+                        start=date(1962, 7, 12))
+pinkFloyd = Band('Pink Floyd', *[sydBarrett, davidGilmour, rogerWaters, nickMason, rickWright])
 
-# bands = [theBeatles, theRollingStones, pinkFloyd]
+bands = [theBeatles, theRollingStones, pinkFloyd]
+bands_json = dumps(bands, indent=4)
+print(bands == loads(bands_json))
 
 
 #%%
