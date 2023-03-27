@@ -53,12 +53,33 @@ def date_json_to_py(iso_date):
 # - absolute path: <path>.absolute()
 # - parent dir: <path>.parent
 
+print(Path.home())
+print(Path.cwd())
+print(Path())
+print(Path('.'))
+p = Path('ADA_Programming_2023')
+print(p)
+print(p.absolute())
+print(p.absolute().parent)
+# print(Path.absolute())
+
 #%%
 # Demonstrate creating and removing directories
 # - new dir: <newDir> = <path> / '<subdir1>/<subdir2>/.../<subdirN>'
 #            <newDir>.mkdir(parents=True, exist_ok=True)
 # - remove dir: <dir>.rmdir()                                           # requires the <dir> to be empty
 # - project dir: settings.PROJECT_DIR
+
+# d = Path.cwd() / 'd/d1/d2'
+# print(d)
+# d.mkdir(parents=True, exist_ok=True)
+# d.rmdir()                                     # removes only the "deepest" dir (d2)
+
+# d = Path.cwd() / 'd/d1'
+# d.rmdir()                                     # removes only the "deepest" dir (d1)
+
+# d = Path.cwd() / 'd'
+# d.rmdir()
 
 
 #%%

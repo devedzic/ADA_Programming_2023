@@ -33,14 +33,18 @@ class Band():
     genres = ['rock', 'blues', 'alternative', ]
 
     def __init__(self, name, *members, start=date.today(), end=date.today()):
+        # Code to check if the band name is specified correctly (possibly raises BandNameError)
+
+        band_name_error = not isinstance(name, str) or (len(name) < 2)
+        if band_name_error:
+            raise BandNameError(name)
+
         self.name = name
         self.members = members
         self.start = start
         self.end = end
 
         self.__i = 0                                  # introduce and initialize iterator counter, self.__i
-
-        # Code to check if the band name is specified correctly (possibly raises BandNameError)
 
     def __str__(self):
         n = f'{self.name}'
@@ -245,7 +249,8 @@ class BandNameError(BandError):
     """
 
     def __init__(self, name):
-        pass
+        Exception.__init__(self, f'BandNameError: \'{name}\' is not a valid band name')
+        self.name = name
 
 
 #%%
@@ -256,37 +261,113 @@ class BandNameError(BandError):
 # If an exception is caught as e, then e.args[0] is the type of exception (relevant for exception handling).
 # To write error messages to the exception console, use sys.stderr.write(f'...').
 
+# print(', '.join([m.name for m in the_beatles.members]))
+try:
+    for i in range(5):
+        print(the_beatles.members[i].name)
+except Exception as e:
+    # print(e)
+    # print(e.args)
+    # print(e.args[0])
+    # sys.stderr.write(e.args[0])
+    sys.stderr.write(f'\n{type(e).__name__}: {e.args[0]}\n\n')
+
 #%%
 # Catching multiple exceptions and the 'finally' clause
+try:
+    for i in range(5):
+        print(the_beatles.members[i].name)
+        # print(the_beatles / 4)
+except IndexError as e:
+    sys.stderr.write(f'\n{type(e).__name__}: {e.args[0]}\n\n')
+except Exception as e:
+    # print(e)
+    # print(e.args)
+    # print(e.args[0])
+    # sys.stderr.write(e.args[0])
+    sys.stderr.write(f'\n{type(e).__name__}: {e.args[0]}\n\n')
+finally:
+    print('Caught an exception. Stopped any further processing.')
 
 #%%
 # Using the 'else' clause (must be after all 'except' clauses)
+try:
+    for i in range(4):
+        print(the_beatles.members[i].name)
+        # print(the_beatles / 4)
+except IndexError as e:
+    sys.stderr.write(f'\n{type(e).__name__}: {e.args[0]}\n\n')
+else:
+    print('Done.')
 
 #%%
 # Catching 'any' exception - empty 'except' clause
+try:
+    for i in range(5):
+        print(the_beatles.members[i].name)
+        # print(the_beatles / 4)
+except:
+    sys.stderr.write('\nCaught an exception. Stopped any further processing.\n\n')
 
 #%%
 # Catching user-defined exceptions
+try:
+    b = Band('a', *[johnLennon, paulMcCartney, georgeHarrison, ringoStarr],
+             start=date(1957, 7, 6), end=date(1970, 4, 11))
+except BandNameError as e:
+    # sys.stderr.write(f'\n{type(e).__name__}: {e.args[0]}')
+    sys.stderr.write(f'\n{e.args[0]}\n\n')
 
 #%%
 # Demonstrate working with files
 
-# theBeatles = Band('The Beatles', *[johnLennon, paulMcCartney, georgeHarrison, ringoStarr],
-#                   start=date(1957, 7, 6), end=date(1970, 4, 10))
-# theRollingStones = Band('The Rolling Stones', *[mickJagger, keithRichards, ronWood, charlieWatts],
-#                         start=date(1962, 7, 12))
-# pinkFloyd = Band('Pink Floyd', *[sydBarrett, davidGilmour, rogerWaters, nickMason, rickWright])
+theBeatles = Band('The Beatles', *[johnLennon, paulMcCartney, georgeHarrison, ringoStarr],
+                  start=date(1957, 7, 6), end=date(1970, 4, 10))
+theRollingStones = Band('The Rolling Stones', *[mickJagger, keithRichards, ronWood, charlieWatts],
+                        start=date(1962, 7, 12))
+pinkFloyd = Band('Pink Floyd', *[sydBarrett, davidGilmour, rogerWaters, nickMason, rickWright])
 
 #%%
 # Writing to a text file - <outfile>.write(str(<obj>), <outfile>.writelines([str(<obj>)+'\n' for <obj> in <objs>])
+bands = [theBeatles, theRollingStones, pinkFloyd]
+file = get_project_dir() / 'data/bands.txt'
+with open(file, 'w') as f:
+    # for band in bands:
+    #     f.write(str(band) + '\n')
+    f.writelines([str(b) + '\n' for b in bands])
+print('Done')
 
 #%%
 # Demonstrate reading from a text file - <infile>.readline(), <infile>.readlines()
+bands = [theBeatles, theRollingStones, pinkFloyd]
+file = get_project_dir() / 'data/bands.txt'
+with open(file, 'r') as f:
+    # lines = f.read().rstrip()
+    # lines = f.read().splitlines()
+    lines = ''
+    while True:
+        line = f.readline()
+        if line:
+            lines += line
+        else:
+            break
+print(lines)
 
 #%%
 # Demonstrate writing to a binary file - pickle.dump(<obj>, <outfile>)
+bands = [theBeatles, theRollingStones, pinkFloyd]
+file = get_project_dir() / 'data/bands'
+with open(file, 'wb') as f:
+    pickle.dump(bands, f)
+print('Done')
 
 #%%
 # Demonstrate reading from a binary file - pickle.load(<infile>)
+bands = [theBeatles, theRollingStones, pinkFloyd]
+file = get_project_dir() / 'data/bands'
+with open(file, 'rb') as f:
+    bands1 = pickle.load(f)
+print('Done')
+print(bands == bands1)
 
 

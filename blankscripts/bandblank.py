@@ -31,11 +31,12 @@ class Band():
     # Insert a class variable (static field), such as genres, date_pattern,...
 
     def __init__(self, name, *members, start=date.today(), end=date.today()):
+        # Code to check if the band name is specified correctly (possibly raises BandNameError).
+        # Do the rest of __init__() only after this checking.
+
         pass
 
         # self.__i = 0                                  # introduce and initialize iterator counter, self.__i
-
-        # Code to check if the band name is specified correctly (possibly raises BandNameError)
 
     def __str__(self):
         pass
@@ -214,7 +215,11 @@ class BandNameError(BandError):
 # Writing to a text file - <outfile>.write(str(<obj>), <outfile>.writelines([str(<obj>)+'\n' for <obj> in <objs>])
 
 #%%
-# Demonstrate reading from a text file - <infile>.readline(), <infile>.readlines()
+# Demonstrate reading from a text file
+#   - <infile>.read() - read all lines, including the '\n's between them; an rstrip() after read() can be helpful
+#   - <infile>.readline() - read a single line from <infile>; an rstrip() after readline() can be helpful
+#   - <infile>.readlines() - read all lines and return a list of the lines that all include '\n' in the end;
+#                            use read().splitlines() to eliminate the '\n's, but the result will still be a list
 
 #%%
 # Demonstrate writing to a binary file - pickle.dump(<obj>, <outfile>)
