@@ -1,3 +1,7 @@
+"""
+The enums used in this project. They define different kinds of instruments and vocals.
+"""
+
 from enum import Enum
 
 
