@@ -44,7 +44,7 @@ class Band():
         self.start = start
         self.end = end
 
-        self.__i = 0                                  # introduce and initialize iterator counter, self.__i
+        # self.__i = 0                                  # introduce and initialize iterator counter, self.__i
 
     def __str__(self):
         n = f'{self.name}'
@@ -93,7 +93,7 @@ class Band():
         Alternatively, the iterator counter (self.__i) is introduced and initialized here.
         """
 
-        # self.__i = 0
+        self.__i = 0
         return self               # sufficient if the iterator counter is introduced and initialized in __init__()
 
     def __next__(self):
@@ -134,7 +134,8 @@ while True:
         break
 print('Done')
 # m = next(the_beatles)             # No! The iterator is exhausted
-
+m_iterator = iter(the_beatles)
+print(next(the_beatles))
 
 #%%
 def next_member(band):
