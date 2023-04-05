@@ -7,6 +7,7 @@ BeautifulSoup documentation: https://www.crummy.com/software/BeautifulSoup/bs4/d
 import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
+import pandas as pd
 
 from util import utility
 from settings import *
@@ -15,8 +16,8 @@ from settings import *
 # Getting started
 
 # The Website to work with, i.e. to scrape info from and crawl over it - Ultimate Classic Rock.
-# The starting URL refers to articles about Paul McCartney.
-start_url = 'https://ultimateclassicrock.com/search/?s=paul%20mccartney'
+# The starting URL refers to articles about George Harrison.
+start_url = 'https://ultimateclassicrock.com/search/?s=George%20Harrison'
 
 #%%
 # Create Response object from GET request, using requests.get(<url>, allow_redirects=False)
@@ -208,7 +209,7 @@ def crawl(url: str, max_pages=1):
 
 def get_article_info_list(start_url: str, max_pages=1):
     """
-    Returns structured information about articles related to Paul McCartney from a multi-page article list.
+    Returns structured information about articles related to George Harrison from a multi-page article list.
     :param start_url: the url of the starting page of a multi-page article list
     :param max_pages: the max number of pages to crawl
     :return: a list of tuples of info-items about the articles from a multi-page article list
@@ -222,6 +223,8 @@ def get_article_info_list(start_url: str, max_pages=1):
 
 #%%
 # Put everything in a csv file
+
+# # Alternative 1, using Python Standard Library
 # import csv
 # csv_file = DATA_DIR / 'articles.csv'
 # header_row = ['Title', 'Author', 'Date', 'Featured image']
@@ -229,3 +232,9 @@ def get_article_info_list(start_url: str, max_pages=1):
 #     out = csv.writer(f)
 #     out.writerow(header_row)
 #     out.writerows(article_info_list)
+
+# # Alternatuve 2, using Pandas
+# csv_file = DATA_DIR / 'articles.csv'
+# df = pd.DataFrame(article_info_list, columns=['Title', 'Author', 'Date', 'Featured image'])
+# # df
+# df.to_csv(csv_file)
