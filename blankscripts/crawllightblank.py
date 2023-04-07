@@ -99,7 +99,7 @@ def crawl(url: str, max_pages=1):
 
 #%%
 # Demonstrate getting values of tag attributes,
-# e.g. <BeautifulSoup object>.find('<tag>').text for an 'a' tag and for a 'visually-hidden' tag.
+# e.g. <BeautifulSoup object>.find('<tag>').text for a 'div' tag, for an 'article' tag, and for an 'a' tag.
 
 #%%
 # Demonstrate <BeautifulSoup object>.find_all(<tag>), e.g. for the 'article' tag; returns a ResultSet object.

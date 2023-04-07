@@ -146,6 +146,8 @@ print()
 print(soup.find('article').text)
 print()
 print(soup.find('article').find('a').text)
+print()
+print(soup.find('span', {'class': 'visually-hidden'}).text)
 
 #%%
 # Demonstrate <BeautifulSoup object>.find_all(<tag>), e.g. for the 'article' tag; returns a ResultSet object.
